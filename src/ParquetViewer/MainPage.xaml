@@ -1,0 +1,48 @@
+﻿<Page
+    x:Class="ParquetViewer.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ParquetViewer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sfgrid="using:Syncfusion.UI.Xaml.Grid"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <Style TargetType="sfgrid:HeaderRowControl">
+            <Setter Property="Background" Value="{ThemeResource SystemControlForegroundAltMediumHighBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <StackPanel x:Name="DropArea" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical"
+                    Style="{StaticResource NiceWideBorder}"
+                    AllowDrop="True"
+                    DragOver="DropArea_DragOver"
+                    Drop="DropArea_Drop">
+            <StackPanel>
+                <TextBlock Text="drag file here or " Height="30" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Button x:Name="OpenFileButton" Content="open from disk" Click="OpenFileButton_Click"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Grid x:Name="DisplayArea" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <sfgrid:SfDataGrid x:Name="SfGrid" AutoGenerateColumns="False" AllowEditing="False"
+                               FontFamily="Century Gothic" FontSize="14"
+                               ColumnSizer="AutoLastColumnFill"
+                               BorderThickness="0"/>
+
+            <StackPanel Grid.Row="1">
+                <TextBlock x:Name="StatusText"/>
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</Page>
