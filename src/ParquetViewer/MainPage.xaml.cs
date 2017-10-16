@@ -7,6 +7,7 @@ using Parquet.Data;
 using ParquetViewer.Model;
 using Syncfusion.Data;
 using Syncfusion.UI.Xaml.Grid;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -46,7 +47,7 @@ namespace ParquetViewer
 
       private void DropArea_DragOver(object sender, DragEventArgs e)
       {
-         e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.Copy;
+         e.AcceptedOperation = DataPackageOperation.Copy;
       }
 
       private async void DropArea_Drop(object sender, DragEventArgs e)
@@ -68,7 +69,11 @@ namespace ParquetViewer
       {
          SfGrid.Columns.Clear();
 
-         if (ds == null) return;
+         if (ds == null)
+         {
+
+            return;
+         }
 
          DropArea.Visibility = Visibility.Collapsed;
          DisplayArea.Visibility = Visibility.Visible;

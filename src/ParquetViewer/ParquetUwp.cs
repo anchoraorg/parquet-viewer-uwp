@@ -10,6 +10,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 
@@ -29,16 +30,30 @@ namespace ParquetViewer
          picker.FileTypeFilter.Add(".parquet");
 
          StorageFile file = await picker.PickSingleFileAsync();
+         if (file == null) return null;
 
          using (IRandomAccessStreamWithContentType uwpStream = await file.OpenReadAsync())
          {
-            DataSet ds = Open(uwpStream);
+            DataSet ds = await Open(uwpStream);
 
             return ds;
          }
       }
 
       public static async Task<DataSet> OpenFromDragDropAsync(DragEventArgs e)
+      {
+         StorageFile storageFile = await GetFirstParquetFileAsync(e);
+         if (storageFile == null) return null;
+
+         using (IRandomAccessStreamWithContentType uwpStream = await storageFile.OpenReadAsync())
+         {
+            DataSet ds = await Open(uwpStream);
+
+            return ds;
+         }
+      }
+
+      public static async Task<StorageFile> GetFirstParquetFileAsync(DragEventArgs e)
       {
          if (e.DataView.Contains(StandardDataFormats.StorageItems))
          {
@@ -48,11 +63,9 @@ namespace ParquetViewer
             {
                var storageFile = items[0] as StorageFile;
 
-               using (IRandomAccessStreamWithContentType uwpStream = await storageFile.OpenReadAsync())
+               if (storageFile != null && Path.GetExtension(storageFile.Name).ToLower() == ".parquet")
                {
-                  DataSet ds = Open(uwpStream);
-
-                  return ds;
+                  return storageFile;
                }
             }
          }
@@ -73,7 +86,7 @@ namespace ParquetViewer
 
                using (IRandomAccessStreamWithContentType uwpStream = await file.OpenReadAsync())
                {
-                  DataSet ds = Open(uwpStream);
+                  DataSet ds = await Open(uwpStream);
 
                   return ds;
                }
@@ -83,7 +96,7 @@ namespace ParquetViewer
          return null;
       }
 
-      private static DataSet Open(IRandomAccessStreamWithContentType uwpStream)
+      private static async Task<DataSet> Open(IRandomAccessStreamWithContentType uwpStream)
       {
          using (Stream stream = uwpStream.AsStreamForRead())
          {
@@ -98,7 +111,16 @@ namespace ParquetViewer
                TreatByteArrayAsString = true
             };
 
-            return ParquetReader.Read(stream, formatOptions, readerOptions);
+            try
+            {
+               return ParquetReader.Read(stream, formatOptions, readerOptions);
+            }
+            catch(Exception ex)
+            {
+               var dialog = new MessageDialog(ex.Message, "Cannot open file");
+               await dialog.ShowAsync();
+               return null;
+            }
          }
       }
    }
