@@ -1,11 +1,7 @@
 # Apache Parquet Viewer for Windows 10 (UWP)
 
-Simple viewer based on https://github.com/elastacloud/parquet-dotnet
+Simple Apache Parquet Viewer based on [Parquet.net](https://github.com/elastacloud/parquet-dotnet)
 
 ![Screenshot00](graphics/screenshot00.png)
 
-![Screenshot02](graphics/screenshot02.png)
-
-![Screenshot01](graphics/screenshot01.png)
-
-publishing to Store is pending...
+<a href="https://www.microsoft.com/store/apps/9pgb0m8z4j2t?ocid=badge"><img src="https://assets.windowsphone.com/f2f77ec7-9ba9-4850-9ebe-77e366d08adc/English_Get_it_Win_10_InvariantCulture_Default.png" alt="Get it on Windows 10" width="200" /></a>
