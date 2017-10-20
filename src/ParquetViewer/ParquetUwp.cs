@@ -20,7 +20,7 @@ namespace ParquetViewer
    {
       public const int MaxRows = 500;
 
-      public static async Task<DataSet> OpenFromFilePickerAsync()
+      public static async Task<StorageFile> GetFromFilePickerAsync()
       {
          var picker = new FileOpenPicker
          {
@@ -29,28 +29,7 @@ namespace ParquetViewer
          };
          picker.FileTypeFilter.Add(".parquet");
 
-         StorageFile file = await picker.PickSingleFileAsync();
-         if (file == null) return null;
-
-         using (IRandomAccessStreamWithContentType uwpStream = await file.OpenReadAsync())
-         {
-            DataSet ds = await Open(uwpStream);
-
-            return ds;
-         }
-      }
-
-      public static async Task<DataSet> OpenFromDragDropAsync(DragEventArgs e)
-      {
-         StorageFile storageFile = await GetFirstParquetFileAsync(e);
-         if (storageFile == null) return null;
-
-         using (IRandomAccessStreamWithContentType uwpStream = await storageFile.OpenReadAsync())
-         {
-            DataSet ds = await Open(uwpStream);
-
-            return ds;
-         }
+         return await picker.PickSingleFileAsync();
       }
 
       public static async Task<StorageFile> GetFirstParquetFileAsync(DragEventArgs e)
@@ -73,7 +52,7 @@ namespace ParquetViewer
          return null;
       }
 
-      public static async Task<DataSet> OpenFromFileAssociationAsync(NavigationEventArgs e)
+      public static StorageFile GetFromFileAssociationAsync(NavigationEventArgs e)
       {
          var args = e.Parameter as Windows.ApplicationModel.Activation.IActivatedEventArgs;
          if (args != null)
@@ -83,43 +62,40 @@ namespace ParquetViewer
                var fileArgs = args as Windows.ApplicationModel.Activation.FileActivatedEventArgs;
                string strFilePath = fileArgs.Files[0].Path;
                var file = (StorageFile)fileArgs.Files[0];
-
-               using (IRandomAccessStreamWithContentType uwpStream = await file.OpenReadAsync())
-               {
-                  DataSet ds = await Open(uwpStream);
-
-                  return ds;
-               }
+               return file;
             }
          }
 
          return null;
       }
 
-      private static async Task<DataSet> Open(IRandomAccessStreamWithContentType uwpStream)
+      public static async Task<DataSet> LoadAsync(StorageFile file)
       {
-         using (Stream stream = uwpStream.AsStreamForRead())
+         using (IRandomAccessStreamWithContentType uwpStream = await file.OpenReadAsync())
          {
-            var readerOptions = new ReaderOptions()
+            using (Stream stream = uwpStream.AsStreamForRead())
             {
-               Offset = 0,
-               Count = MaxRows
-            };
+               var readerOptions = new ReaderOptions()
+               {
+                  Offset = 0,
+                  Count = MaxRows
+               };
 
-            var formatOptions = new ParquetOptions
-            {
-               TreatByteArrayAsString = true
-            };
+               var formatOptions = new ParquetOptions
+               {
+                  TreatByteArrayAsString = true
+               };
 
-            try
-            {
-               return ParquetReader.Read(stream, formatOptions, readerOptions);
-            }
-            catch(Exception ex)
-            {
-               var dialog = new MessageDialog(ex.Message, "Cannot open file");
-               await dialog.ShowAsync();
-               return null;
+               try
+               {
+                  return ParquetReader.Read(stream, formatOptions, readerOptions);
+               }
+               catch (Exception ex)
+               {
+                  var dialog = new MessageDialog(ex.Message, "Cannot open file");
+                  await dialog.ShowAsync();
+                  return null;
+               }
             }
          }
       }

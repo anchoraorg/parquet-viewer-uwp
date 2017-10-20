@@ -7,8 +7,11 @@
     <Application.Resources>
         <Style x:Key="NiceWideBorder" TargetType="StackPanel">
             <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
             <Setter Property="Padding" Value="10"/>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Black"/>
         </Style>
     </Application.Resources>
 </Application>

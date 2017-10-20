@@ -6,11 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sfgrid="using:Syncfusion.UI.Xaml.Grid"
+    xmlns:uwpct="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:model="using:ParquetViewer.Model"
     mc:Ignorable="d"
-    Margin="0,0,5,0">
+    Margin="0,-8,0,0">
     <Page.Resources>
         <Style TargetType="sfgrid:HeaderRowControl">
-            <Setter Property="Background" Value="Azure"/>
+            <Setter Property="Background" Value="Gray"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Height" Value="30"/>
@@ -21,38 +23,64 @@
             <Setter Property="Background" Value="{ThemeResource SystemControlForegroundAltMediumHighBrush}"/>
             <Setter Property="Foreground" Value="Black"/>
         </Style>
+        <DataTemplate x:Key="DefaultTemplate" x:DataType="model:MenuItem">
+            <Grid Width="240" Height="48" Margin="0" Padding="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Padding="-24,0,0,0">
+                    <FontIcon FontSize="16" FontFamily="Segoe MDL2 Assets"
+                              Glyph="{Binding Glyph}"
+                              Foreground="White"/>
+                </StackPanel>
+                <TextBlock Grid.Column="1" Text="{Binding Label}" FontSize="16" VerticalAlignment="Center" Foreground="White"
+                           Padding="8, 0, 0, 1"/>
+            </Grid>
+        </DataTemplate>
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <StackPanel x:Name="DropArea" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical"
-                    Style="{StaticResource NiceWideBorder}"
-                    AllowDrop="True"
-                    DragOver="DropArea_DragOver"
-                    Drop="DropArea_Drop">
-            <StackPanel>
-                <TextBlock Text="drag file here or " Height="30" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Button x:Name="OpenFileButton" Content="open from disk" Click="OpenFileButton_Click"/>
-            </StackPanel>
-        </StackPanel>
+        <uwpct:HamburgerMenu x:Name="HamburgerMenu"
+                                PaneBackground="Black"
+                                Foreground="White"
+                                ItemTemplate="{StaticResource DefaultTemplate}"
+                                ItemClick="HamburgerMenu_ItemClick"
+                                OptionsItemTemplate="{StaticResource DefaultTemplate}"
+                                OptionsItemClick="HamburgerMenu_ItemClick"
+                             DisplayMode="CompactOverlay">
+            <Grid>
+                <local:FrontEmpty x:Name="FrontEmptyArea"/>
 
-        <Grid x:Name="DisplayArea" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid x:Name="DisplayArea" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            
-            <sfgrid:SfDataGrid x:Name="SfGrid" AutoGenerateColumns="False" AllowEditing="False"
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <sfgrid:SfDataGrid x:Name="SfGrid" AutoGenerateColumns="False" AllowEditing="False"
                                FontFamily="Century Gothic" FontSize="14"
                                ColumnSizer="AutoLastColumnFill"
                                RowHeight="28"
                                BorderThickness="0"/>
 
-            <StackPanel Grid.Row="1">
-                <TextBlock x:Name="StatusText"/>
-            </StackPanel>
-        </Grid>
+                    <StackPanel Grid.Row="1" Background="Black">
+                        <TextBlock x:Name="StatusText" Padding="5,0,0,3" Foreground="White"/>
+                    </StackPanel>
+                </Grid>
+
+                <uwpct:Loading x:Name="LoadingControl"
+                               HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                               Background="Black" Opacity="0.7">
+                    <StackPanel Orientation="Horizontal" Padding="12">
+                        <ProgressRing IsActive="True" Margin="0,0,12,0" Foreground="Azure" />
+                        <TextBlock Text="Loading .parquet file..." VerticalAlignment="Center" Foreground="White"/>
+                    </StackPanel>
+                </uwpct:Loading>
+            </Grid>
+        </uwpct:HamburgerMenu>
 
     </Grid>
 </Page>

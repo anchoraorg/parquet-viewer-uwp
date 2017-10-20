@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -18,6 +17,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Threading.Tasks;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -33,37 +33,45 @@ namespace ParquetViewer
          this.InitializeComponent();
 
          DisplayArea.Visibility = Visibility.Collapsed;
-         DropArea.Visibility = Visibility.Visible;
+         FrontEmptyArea.Visibility = Visibility.Visible;
+
+         HamburgerMenu.ItemsSource = MenuItem.GetMainItems();
+         HamburgerMenu.OptionsItemsSource = MenuItem.GetOptionsItems();
+         FrontEmptyArea.FileDragged = FileDraggedIn;
       }
 
       protected override async void OnNavigatedTo(NavigationEventArgs e)
       {
          base.OnNavigatedTo(e);
 
-         DataSet ds = await ParquetUwp.OpenFromFileAssociationAsync(e);
-
-         Display(ds);
+         await LoadAndDisplay(ParquetUwp.GetFromFileAssociationAsync(e));
       }
 
-      private void DropArea_DragOver(object sender, DragEventArgs e)
+      private async Task FileDraggedIn(StorageFile file)
       {
-         e.AcceptedOperation = DataPackageOperation.Copy;
+         await LoadAndDisplay(file);
       }
 
-      private async void DropArea_Drop(object sender, DragEventArgs e)
+      private async Task LoadAndDisplay(StorageFile file)
       {
-         DataSet ds = await ParquetUwp.OpenFromDragDropAsync(e);
+         HamburgerMenu.IsPaneOpen = false;
 
-         Display(ds);
+         if (file == null) return;
+
+         LoadingControl.IsLoading = true;
+
+         try
+         {
+            DataSet ds = await ParquetUwp.LoadAsync(file);
+
+            Display(ds);
+         }
+         finally
+         {
+            LoadingControl.IsLoading = false;
+         }
+
       }
-
-      private async void OpenFileButton_Click(object sender, RoutedEventArgs e)
-      {
-         DataSet ds = await ParquetUwp.OpenFromFilePickerAsync();
-
-         Display(ds);
-      }
-
 
       public void Display(DataSet ds)
       {
@@ -75,7 +83,7 @@ namespace ParquetViewer
             return;
          }
 
-         DropArea.Visibility = Visibility.Collapsed;
+         FrontEmptyArea.Visibility = Visibility.Collapsed;
          DisplayArea.Visibility = Visibility.Visible;
 
          for (int i = 0; i < ds.ColumnCount; i++)
@@ -134,6 +142,19 @@ namespace ParquetViewer
          result.AllowEditing = true;
 
          return result;
+      }
+
+      private async void HamburgerMenu_ItemClick(object sender, ItemClickEventArgs e)
+      {
+         MenuItem mi = e.ClickedItem as MenuItem;
+         if (mi == null) return;
+
+         if (mi.Action == "open")
+         {
+            await LoadAndDisplay(await ParquetUwp.GetFromFilePickerAsync());
+         }
+
+         HamburgerMenu.SelectedItem = null;
       }
    }
 }
