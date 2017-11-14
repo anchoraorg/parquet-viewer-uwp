@@ -53,23 +53,7 @@
             <Grid>
                 <local:FrontEmpty x:Name="FrontEmptyArea"/>
 
-                <Grid x:Name="DisplayArea" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <sfgrid:SfDataGrid x:Name="SfGrid" AutoGenerateColumns="False" AllowEditing="False"
-                               FontFamily="Century Gothic" FontSize="14"
-                               ColumnSizer="AutoLastColumnFill"
-                               RowHeight="28"
-                               BorderThickness="0"/>
-
-                    <StackPanel Grid.Row="1" Background="Black">
-                        <TextBlock x:Name="StatusText" Padding="5,0,0,3" Foreground="White"/>
-                    </StackPanel>
-                </Grid>
+                <local:ParquetView x:Name="DisplayArea"/>
 
                 <uwpct:Loading x:Name="LoadingControl"
                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"

@@ -75,73 +75,10 @@ namespace ParquetViewer
 
       public void Display(DataSet ds)
       {
-         SfGrid.Columns.Clear();
-
-         if (ds == null)
-         {
-
-            return;
-         }
+         DisplayArea.Display(ds);
 
          FrontEmptyArea.Visibility = Visibility.Collapsed;
          DisplayArea.Visibility = Visibility.Visible;
-
-         for (int i = 0; i < ds.ColumnCount; i++)
-         {
-            SfGrid.Columns.Add(CreateSfColumn(ds.Schema[i], i));
-         }
-
-         SfGrid.ItemsSource = Enumerable
-            .Range(0, ds.RowCount)
-            .Select(rn => new TableRowView(ds[rn]));
-
-
-         if(ds.TotalRowCount > ParquetUwp.MaxRows)
-         {
-            StatusText.Text = $"First {ParquetUwp.MaxRows} of {ds.TotalRowCount} are shown";
-         }
-         else
-         {
-            StatusText.Text = $"All {ds.TotalRowCount} rows are shown";
-         }
-
-      }
-
-      private GridColumn CreateSfColumn(SchemaElement se, int i)
-      {
-         GridColumn result;
-
-         if (se.ElementType == typeof(int) ||
-            se.ElementType == typeof(float) ||
-            se.ElementType == typeof(double) ||
-            se.ElementType == typeof(decimal))
-         {
-            result = new GridNumericColumn();
-         }
-         else if (se.ElementType == typeof(DateTime) ||
-            se.ElementType == typeof(DateTimeOffset))
-         {
-            result = new GridDateTimeColumn();
-         }
-         else if (se.ElementType == typeof(bool))
-         {
-            result = new GridCheckBoxColumn();
-         }
-         else
-         {
-            result = new GridTextColumn();
-         }
-
-         result.MappingName = $"[{i}]";
-         result.HeaderText = se.Name;
-         result.AllowFiltering = false;
-         result.AllowFocus = true;
-         result.AllowResizing = true;
-         result.AllowSorting = true;
-         result.FilterBehavior = FilterBehavior.StronglyTyped;
-         result.AllowEditing = true;
-
-         return result;
       }
 
       private async void HamburgerMenu_ItemClick(object sender, ItemClickEventArgs e)
