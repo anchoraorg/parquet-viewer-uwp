@@ -153,6 +153,14 @@ namespace ParquetViewer
          {
             await LoadAndDisplay(await ParquetUwp.GetFromFilePickerAsync());
          }
+         else if(mi.Action == "issue")
+         {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("https://github.com/aloneguid/parquet-viewer-uwp/issues/new"));
+         }
+         else if(mi.Action == "about")
+         {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("https://github.com/aloneguid/parquet-viewer-uwp"));
+         }
 
          HamburgerMenu.SelectedItem = null;
       }

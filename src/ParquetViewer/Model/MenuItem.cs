@@ -3,6 +3,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace ParquetViewer.Model
 {
+   //https://docs.microsoft.com/en-gb/windows/uwp/design/style/segoe-ui-symbol-font
    public class MenuItem
    {
       public string Glyph { get; set; }
@@ -13,6 +14,7 @@ namespace ParquetViewer.Model
       {
          var items = new List<MenuItem>();
          items.Add(new MenuItem() { Glyph = "\uE8DA", Label = "Open File", Action = "open" });
+         items.Add(new MenuItem() { Glyph = "\uE8A7", Label = "Report Issue...", Action = "issue" });
          return items;
       }
 
