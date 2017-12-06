@@ -37,7 +37,7 @@ namespace ParquetViewer
             return;
          }
 
-         for (int i = 0; i < ds.ColumnCount; i++)
+         for (int i = 0; i < ds.FieldCount; i++)
          {
             SfGrid.Columns.Add(CreateSfColumn(ds.Schema[i], i));
          }
@@ -58,23 +58,26 @@ namespace ParquetViewer
 
       }
 
-      private GridColumn CreateSfColumn(SchemaElement se, int i)
+      private GridColumn CreateSfColumn(Field field, int i)
       {
          GridColumn result;
 
-         if (se.ElementType == typeof(int) ||
-            se.ElementType == typeof(float) ||
-            se.ElementType == typeof(double) ||
-            se.ElementType == typeof(decimal))
+         DataType t = field.SchemaType == SchemaType.Data
+            ? ((DataField)field).DataType
+            : DataType.String;
+
+         if (t == DataType.Int32 ||
+            t == DataType.Float ||
+            t == DataType.Double ||
+            t == DataType.Decimal)
          {
             result = new GridNumericColumn();
          }
-         else if (se.ElementType == typeof(DateTime) ||
-            se.ElementType == typeof(DateTimeOffset))
+         else if (t == DataType.DateTimeOffset)
          {
             result = new GridDateTimeColumn();
          }
-         else if (se.ElementType == typeof(bool))
+         else if (t == DataType.Boolean)
          {
             result = new GridCheckBoxColumn();
          }
@@ -84,7 +87,7 @@ namespace ParquetViewer
          }
 
          result.MappingName = $"[{i}]";
-         result.HeaderText = se.Name;
+         result.HeaderText = field.Name;
          result.AllowFiltering = false;
          result.AllowFocus = true;
          result.AllowResizing = true;

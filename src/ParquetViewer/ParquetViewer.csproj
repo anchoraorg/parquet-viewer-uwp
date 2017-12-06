@@ -204,10 +204,10 @@
       <Version>1.4.32</Version>
     </PackageReference>
     <PackageReference Include="Parquet.Net">
-      <Version>1.5.1</Version>
+      <Version>2.2.0-preview-247</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfGrid.UWP46">
-      <Version>15.3.0.33</Version>
+      <Version>15.4.0.17</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
