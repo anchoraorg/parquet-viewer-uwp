@@ -4,11 +4,16 @@ using Syncfusion.Data;
 using Syncfusion.UI.Xaml.Grid;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -23,39 +28,42 @@ namespace ParquetViewer
 {
    public sealed partial class ParquetView : UserControl
    {
+      private ParquetIncrementalList _rowsList;
+
       public ParquetView()
       {
          this.InitializeComponent();
       }
 
-      public void Display(DataSet ds)
+      public async Task DisplayAsync(StorageFile file)
       {
          SfGrid.Columns.Clear();
+         _rowsList = new ParquetIncrementalList(file, LoadRowsAsync);
+         await _rowsList.InitialiseAsync();
 
-         if (ds == null)
+         if (_rowsList.Schema == null)
          {
             return;
          }
 
-         for (int i = 0; i < ds.FieldCount; i++)
+         for (int i = 0; i < _rowsList.Schema.Length; i++)
          {
-            SfGrid.Columns.Add(CreateSfColumn(ds.Schema[i], i));
+            SfGrid.Columns.Add(CreateSfColumn(_rowsList.Schema[i], i));
          }
 
-         SfGrid.ItemsSource = Enumerable
-            .Range(0, ds.RowCount)
-            .Select(rn => new TableRowView(ds[rn]));
+         SfGrid.ItemsSource = _rowsList;
+      }
 
+      private async Task<IList<TableRowView>> LoadRowsAsync(CancellationToken token, uint count, int baseIndex)
+      {
+         var result = await _rowsList.LoadRowsAsync(token, count, baseIndex);
 
-         if (ds.TotalRowCount > ParquetUwp.MaxRows)
-         {
-            StatusText.Text = $"First {ParquetUwp.MaxRows} of {ds.TotalRowCount} are shown";
-         }
-         else
-         {
-            StatusText.Text = $"All {ds.TotalRowCount} rows are shown";
-         }
+         ulong memSize = ProcessDiagnosticInfo.GetForCurrentProcess().MemoryUsage.GetReport().WorkingSetSizeInBytes;
 
+         StatusText.Text = string.Format("total: {0:N0} | cached: {1:N0} | memory used: {2}",
+            _rowsList.MaxItemCount, _rowsList.CachedRowsCount, ((long)memSize).ToFileSizeUiString());
+
+         return result;
       }
 
       private GridColumn CreateSfColumn(Field field, int i)
@@ -83,7 +91,7 @@ namespace ParquetViewer
          }
          else
          {
-            result = new GridTextColumn();
+            result = new GridTextColumn() { TextWrapping = TextWrapping.NoWrap };
          }
 
          result.MappingName = $"[{i}]";

@@ -44,15 +44,15 @@ namespace ParquetViewer
       {
          base.OnNavigatedTo(e);
 
-         await LoadAndDisplay(ParquetUwp.GetFromFileAssociationAsync(e));
+         await LoadAndDisplayAsync(ParquetUwp.GetFromFileAssociationAsync(e));
       }
 
       private async Task FileDraggedIn(StorageFile file)
       {
-         await LoadAndDisplay(file);
+         await LoadAndDisplayAsync(file);
       }
 
-      private async Task LoadAndDisplay(StorageFile file)
+      private async Task LoadAndDisplayAsync(StorageFile file)
       {
          HamburgerMenu.IsPaneOpen = false;
 
@@ -62,9 +62,7 @@ namespace ParquetViewer
 
          try
          {
-            DataSet ds = await ParquetUwp.LoadAsync(file);
-
-            Display(ds);
+            await DisplayAsync(file);
          }
          finally
          {
@@ -73,9 +71,9 @@ namespace ParquetViewer
 
       }
 
-      public void Display(DataSet ds)
+      public async Task DisplayAsync(StorageFile file)
       {
-         DisplayArea.Display(ds);
+         await DisplayArea.DisplayAsync(file);
 
          FrontEmptyArea.Visibility = Visibility.Collapsed;
          DisplayArea.Visibility = Visibility.Visible;
@@ -88,7 +86,7 @@ namespace ParquetViewer
 
          if (mi.Action == "open")
          {
-            await LoadAndDisplay(await ParquetUwp.GetFromFilePickerAsync());
+            await LoadAndDisplayAsync(await ParquetUwp.GetFromFilePickerAsync());
          }
          else if(mi.Action == "issue")
          {

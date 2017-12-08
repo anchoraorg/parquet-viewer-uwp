@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Parquet.Data;
+﻿using Parquet.Data;
 
 namespace ParquetViewer.Model
 {
@@ -16,6 +11,12 @@ namespace ParquetViewer.Model
          this._parquetRow = row;
       }
 
-      public object this[int i] => _parquetRow[i];
+      public object this[int i]
+      {
+         get
+         {
+            return _parquetRow[i];
+         }
+      }
    }
 }

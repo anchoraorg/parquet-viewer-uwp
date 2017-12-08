@@ -21,7 +21,8 @@
                                FontFamily="Century Gothic" FontSize="14"
                                ColumnSizer="AutoLastColumnFill"
                                RowHeight="28"
-                               BorderThickness="0"/>
+                               BorderThickness="0"
+                           />
 
         <StackPanel Grid.Row="1" Background="Black">
             <TextBlock x:Name="StatusText" Padding="5,0,0,3" Foreground="White"/>

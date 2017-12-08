@@ -69,7 +69,7 @@ namespace ParquetViewer
          return null;
       }
 
-      public static async Task<DataSet> LoadAsync(StorageFile file)
+      public static async Task<DataSet> LoadAsync(StorageFile file, int offset = 0, int count = 100)
       {
          using (IRandomAccessStreamWithContentType uwpStream = await file.OpenReadAsync())
          {
@@ -77,8 +77,8 @@ namespace ParquetViewer
             {
                var readerOptions = new ReaderOptions()
                {
-                  Offset = 0,
-                  Count = MaxRows
+                  Offset = offset,
+                  Count = count
                };
 
                var formatOptions = new ParquetOptions
