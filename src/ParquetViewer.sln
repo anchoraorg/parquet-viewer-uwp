@@ -7,7 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParquetViewer", "ParquetVie
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D83E5176-425E-4941-A859-B8A1C2985DDC}"
 	ProjectSection(SolutionItems) = preProject
-		nuget.config = nuget.config
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject

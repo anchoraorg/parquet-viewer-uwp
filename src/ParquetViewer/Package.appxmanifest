@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="5235CommonSenseApps.ApacheParquetViewer" Publisher="CN=A34DF2D7-B781-4FD1-92E9-C3166CCD44D6" Version="1.2.17.0" />
+  <Identity Name="5235CommonSenseApps.ApacheParquetViewer" Publisher="CN=A34DF2D7-B781-4FD1-92E9-C3166CCD44D6" Version="1.3.18.0" />
   <mp:PhoneIdentity PhoneProductId="e8e0016c-d3ac-4b72-8383-f2d8ceaaf7e9" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Apache Parquet Viewer</DisplayName>

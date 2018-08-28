@@ -1,26 +1,13 @@
-﻿using Parquet.Data;
+﻿using NetBox.Extensions;
+using Parquet.Data;
 using ParquetViewer.Model;
-using Syncfusion.Data;
-using Syncfusion.UI.Xaml.Grid;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -74,16 +61,26 @@ namespace ParquetViewer
             ? ((DataField)field).DataType
             : DataType.String;
 
-         if (t == DataType.Int32 ||
+         if (
+            t == DataType.Byte ||
+            t == DataType.SignedByte ||
+            t == DataType.UnsignedByte ||
+            t == DataType.Short ||
+            t == DataType.UnsignedShort ||
+            t == DataType.Int16 ||
+            t == DataType.UnsignedInt16 ||
+            t == DataType.Int32 ||
+            t == DataType.Int64 ||
+            t == DataType.Int96 ||
             t == DataType.Float ||
             t == DataType.Double ||
             t == DataType.Decimal)
          {
-            result = new GridNumericColumn();
+            result = new GridNumericColumn() { TextWrapping = TextWrapping.NoWrap };
          }
          else if (t == DataType.DateTimeOffset)
          {
-            result = new GridDateTimeColumn();
+            result = new GridDateTimeColumn() { TextWrapping = TextWrapping.NoWrap };
          }
          else if (t == DataType.Boolean)
          {
