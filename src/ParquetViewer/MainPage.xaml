@@ -5,24 +5,11 @@
     xmlns:local="using:ParquetViewer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:sfgrid="using:Syncfusion.UI.Xaml.Grid"
     xmlns:uwpct="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:model="using:ParquetViewer.Model"
     mc:Ignorable="d"
     Margin="0,-8,0,0">
     <Page.Resources>
-        <Style TargetType="sfgrid:HeaderRowControl">
-            <Setter Property="Background" Value="Gray"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Margin" Value="0"/>
-            <Setter Property="Padding" Value="0"/>
-        </Style>
-        <Style TargetType="sfgrid:VirtualizingCellsControl">
-            <Setter Property="Background" Value="{ThemeResource SystemControlForegroundAltMediumHighBrush}"/>
-            <Setter Property="Foreground" Value="Black"/>
-        </Style>
         <DataTemplate x:Key="DefaultTemplate" x:DataType="model:MenuItem">
             <Grid Width="240" Height="48" Margin="0" Padding="0">
                 <Grid.ColumnDefinitions>

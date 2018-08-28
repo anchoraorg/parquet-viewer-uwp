@@ -2,6 +2,7 @@
 using Parquet.Data;
 using ParquetViewer.Model;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -13,95 +14,33 @@ using Windows.UI.Xaml.Controls;
 
 namespace ParquetViewer
 {
-   public sealed partial class ParquetView : UserControl
-   {
-      private ParquetIncrementalList _rowsList;
+    public class FileViewModel
+    {
+        private ObservableCollection<TableRowView> _rows = new ObservableCollection<TableRowView>();
 
-      public ParquetView()
-      {
-         this.InitializeComponent();
-      }
+        public ObservableCollection<TableRowView> Rows => _rows;
 
-      public async Task DisplayAsync(StorageFile file)
-      {
-         SfGrid.Columns.Clear();
-         _rowsList = new ParquetIncrementalList(file, LoadRowsAsync);
-         await _rowsList.InitialiseAsync();
+        public FileViewModel()
+        {
 
-         if (_rowsList.Schema == null)
-         {
-            return;
-         }
+        }
+    }
 
-         for (int i = 0; i < _rowsList.Schema.Length; i++)
-         {
-            SfGrid.Columns.Add(CreateSfColumn(_rowsList.Schema[i], i));
-         }
+    public sealed partial class ParquetView : UserControl
+    {
+        public ParquetView()
+        {
+            this.InitializeComponent();
 
-         SfGrid.ItemsSource = _rowsList;
-      }
+            ViewModel = new FileViewModel();
 
-      private async Task<IList<TableRowView>> LoadRowsAsync(CancellationToken token, uint count, int baseIndex)
-      {
-         var result = await _rowsList.LoadRowsAsync(token, count, baseIndex);
+        }
 
-         ulong memSize = ProcessDiagnosticInfo.GetForCurrentProcess().MemoryUsage.GetReport().WorkingSetSizeInBytes;
+        public FileViewModel ViewModel { get; set; }
 
-         StatusText.Text = string.Format("total: {0:N0} | cached: {1:N0} | memory used: {2}",
-            _rowsList.MaxItemCount, _rowsList.CachedRowsCount, ((long)memSize).ToFileSizeUiString());
-
-         return result;
-      }
-
-      private GridColumn CreateSfColumn(Field field, int i)
-      {
-         GridColumn result;
-
-         DataType t = field.SchemaType == SchemaType.Data
-            ? ((DataField)field).DataType
-            : DataType.String;
-
-         if (
-            t == DataType.Byte ||
-            t == DataType.SignedByte ||
-            t == DataType.UnsignedByte ||
-            t == DataType.Short ||
-            t == DataType.UnsignedShort ||
-            t == DataType.Int16 ||
-            t == DataType.UnsignedInt16 ||
-            t == DataType.Int32 ||
-            t == DataType.Int64 ||
-            t == DataType.Int96 ||
-            t == DataType.Float ||
-            t == DataType.Double ||
-            t == DataType.Decimal)
-         {
-            result = new GridNumericColumn() { TextWrapping = TextWrapping.NoWrap };
-         }
-         else if (t == DataType.DateTimeOffset)
-         {
-            result = new GridDateTimeColumn() { TextWrapping = TextWrapping.NoWrap };
-         }
-         else if (t == DataType.Boolean)
-         {
-            result = new GridCheckBoxColumn();
-         }
-         else
-         {
-            result = new GridTextColumn() { TextWrapping = TextWrapping.NoWrap };
-         }
-
-         result.MappingName = $"[{i}]";
-         result.HeaderText = field.Name;
-         result.AllowFiltering = false;
-         result.AllowFocus = true;
-         result.AllowResizing = true;
-         result.AllowSorting = true;
-         result.FilterBehavior = FilterBehavior.StronglyTyped;
-         result.AllowEditing = true;
-
-         return result;
-      }
-
-   }
+        public async Task DisplayAsync(StorageFile file)
+        {
+            FileGrid.Columns.Clear();
+        }
+    }
 }

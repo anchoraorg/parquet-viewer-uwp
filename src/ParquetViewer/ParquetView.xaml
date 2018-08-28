@@ -5,7 +5,7 @@
     xmlns:local="using:ParquetViewer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:sfgrid="using:Syncfusion.UI.Xaml.Grid"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -17,12 +17,9 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <sfgrid:SfDataGrid x:Name="SfGrid" AutoGenerateColumns="False" AllowEditing="False"
-                               FontFamily="Century Gothic" FontSize="14"
-                               ColumnSizer="AutoLastColumnFill"
-                               RowHeight="28"
-                               BorderThickness="0"
-                           />
+        <controls:DataGrid x:Name="FileGrid"
+                         AutoGenerateColumns="False"
+                         ItemsSource="{x:Bind ViewModel.Rows}"/>
 
         <StackPanel Grid.Row="1" Background="Black">
             <TextBlock x:Name="StatusText" Padding="5,0,0,3" Foreground="White"/>
