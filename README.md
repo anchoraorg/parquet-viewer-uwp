@@ -1,4 +1,4 @@
-# Apache Parquet Viewer for Windows 10 (UWP)
+# Apache Parquet Viewer for Windows 10 (UWP) [![Build status](https://aloneguid.visualstudio.com/Parquet%20Viewer%20for%20Windows%2010/_apis/build/status/Core%20Build)](https://aloneguid.visualstudio.com/Parquet%20Viewer%20for%20Windows%2010/_build/latest?definitionId=28)
 
 Simple Apache Parquet Viewer based on [Parquet.net](https://github.com/elastacloud/parquet-dotnet)
 
