@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Parquet;
 using Parquet.Data;
+using Parquet.Data.Rows;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -69,18 +70,12 @@ namespace ParquetViewer
          return null;
       }
 
-      public static async Task<DataSet> LoadAsync(StorageFile file, int offset = 0, int count = 100)
+      public static async Task<Table> LoadAsync(StorageFile file, int offset = 0, int count = 100)
       {
          using (IRandomAccessStreamWithContentType uwpStream = await file.OpenReadAsync())
          {
             using (Stream stream = uwpStream.AsStreamForRead())
             {
-               var readerOptions = new ReaderOptions()
-               {
-                  Offset = offset,
-                  Count = count
-               };
-
                var formatOptions = new ParquetOptions
                {
                   TreatByteArrayAsString = true
@@ -88,7 +83,10 @@ namespace ParquetViewer
 
                try
                {
-                  return ParquetReader.Read(stream, formatOptions, readerOptions);
+                  using (var reader = new ParquetReader(stream, formatOptions))
+                  {
+                     return reader.ReadAsTable();
+                  }
                }
                catch (Exception ex)
                {
