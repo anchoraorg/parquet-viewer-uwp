@@ -17,9 +17,9 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <controls:DataGrid x:Name="FileGrid"
+        <controls:DataGrid x:Name="FileGrid" Foreground="Black"
                          AutoGenerateColumns="False"
-                         ItemsSource="{x:Bind ViewModel.Rows}"/>
+                           Margin="0,5,0,0"/>
 
         <StackPanel Grid.Row="1" Background="Black">
             <TextBlock x:Name="StatusText" Padding="5,0,0,3" Foreground="White"/>
