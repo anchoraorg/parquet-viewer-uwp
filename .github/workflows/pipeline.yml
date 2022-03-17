@@ -9,7 +9,7 @@ jobs:
     runs-on: windows-latest
 
     env:
-      SigningCertificate: Anchora.com.au.pfx
+      SigningCertificate: ParquetViewer_StoreKey.pfx
       Solution_Path: src\ParquetViewer.sln
       UWP_Project_Path: src\ParquetViewer\ParquetViewer.csproj
       UWP_Project_Directory: .\src\ParquetViewer
