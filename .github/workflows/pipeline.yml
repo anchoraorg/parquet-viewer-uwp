@@ -47,7 +47,7 @@ jobs:
     - name: Update manifest version
       run: |
         [xml]$manifest = get-content ".\$env:UWP_Project_Directory\Package.appxmanifest"
-        $manifest.Package.Identity.Version = "${{steps.getVersion.outputs.result}}"
+        $manifest.Package.Identity.Version = "${{steps.getVersion.outputs.result}}.0"
         $manifest.save(".\$env:UWP_Project_Directory\Package.appxmanifest")
         
     - name: Decode the Pfx
