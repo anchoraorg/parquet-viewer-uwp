@@ -76,7 +76,7 @@ jobs:
       env:
         token: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag: ${{ github.ref }}
-        artifacts: "C:\DeployOutput\StorePackage_${{steps.getVersion.outputs.result}}.zip"
+        tag: "${{ github.ref }}"
+        artifacts: "C:\\DeployOutput\\StorePackage_${{steps.getVersion.outputs.result}}.zip"
         allowUpdates: true
         body: "Full Changelog: https://github.com/anchoraorg/parquet-viewer-uwp/commits/${{ github.ref }}"
