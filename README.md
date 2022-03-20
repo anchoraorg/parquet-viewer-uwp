@@ -6,5 +6,38 @@ Simple Apache Parquet Viewer based on [Parquet.net](https://github.com/elastaclo
 
 ![Screenshot00](graphics/screenshot00.png)
 
-[Microsoft App Store](https://www.microsoft.com/store/apps/9pgb0m8z4j2t?ocid=badge)
+## App Info for Company Portal
 
+* Name
+
+```text
+Apache Parquet Viewer
+```
+
+* Description
+
+```text
+A simple native UWP viewer for Apache Parquet files (.parquet) based on the great .NET open-source library https://github.com/anchoraorg/parquet-dotnet.
+
+Supports most .parquet file formats. You can open a file by selecting from file picker, dragging on the app or double-clicking a .parquet file on disk.
+
+Source: https://github.com/anchoraorg/parquet-viewer-uwp
+```
+
+* Publisher
+
+```text
+Anchora
+```
+
+* Category
+
+```text
+Business
+```
+
+* Information Url
+
+```text
+https://github.com/anchoraorg/parquet-viewer-uwp
+```
